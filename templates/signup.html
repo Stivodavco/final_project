@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}ZarobSi.sk - Vytoriť účet{% endblock %}
+{% block content %}
+    <h3 class="text-center p-3">Vytvoriť účet</h3>
+    <form method="POST" class="p-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Meno a priezvisko *</span>
+            <input type="text" class="form-control" placeholder="Jožko Mrkvička" name="full_name" maxlength="50" required>
+        </div>
+        <div class="mb-3">
+            <div class="input-group mb">
+                <span class="input-group-text">Popis</span>
+                <textarea class="form-control" maxlength="300" placeholder="Váš popis sem (voliteľné)" name="description"></textarea>
+            </div>
+            <div class="form-text">Max. 300 znakov</div>
+        </div>
+
+        <div class="mb-3">
+            <div class="input-group">
+                <span class="input-group-text">Používateľské meno *</span>
+                <input type="text" class="form-control restricted-characters" placeholder="jozko_mrkvicka" name="username" maxlength="50" required>
+            </div>
+            <div class="form-text">Používateľské meno môže obsahovať iba písmená, čísla, podtržítka a pomlčky</div>
+        </div>
+
+        <div class="mb-3">
+            <div class="input-group ">
+                <span class="input-group-text">Heslo *</span>
+                <input type="password" class="form-control" name="password" minlength="8" required>
+            </div>
+            <div class="form-text">Minimálne 8 znakov. Ideálne čo najdlhšie ale zapamätateľné, a ťažko uhádnuteľné</div>
+        </div>
+        <div class="d-flex justify-content-center">
+            <input type="submit" class="btn btn-primary" value="Vytvoriť účet">
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}<script src="../static/javascript/form_validation.js"></script>{% endblock %}

@@ -9,19 +9,15 @@
                     <div class="card-body text-center">
                         <h4 class="card-title">{{ offer["title"] }}</h4>
                         <h5 class="card-subtitle text-secondary">Od: {{ offer["author"] }}</h5>
-                        <h5 class="text-warning">{{ offer["rating"] }}<i class="bi bi-star-fill"></i></h5>
-                        <p class="card-text">{{ offer["short_description"] }}</p>
+                        <h5 class="text-warning">{{ offer["rating"] }}<i class="bi bi-star-fill"></i> <span class="text-body-secondary">({{ offer["reviews_num"] }})</span></h5>
                     </div>
                     <div class="card-footer">
                         <h5 class="d-inline-block pt-2">Cena: {{ offer["price"] }}€</h5>
-                        <a href="{{ offer["id"] }}" class="float-end btn btn-primary">Pozrieť <i class="bi bi-info"></i></a>
+                        <a href="/offers/{{ offer["id"] }}" class="float-end btn btn-primary">Pozrieť <i class="bi bi-info"></i></a>
                     </div>
                 </div>
             </div>
             {% endfor %}
         </div>
-
-{#    {% for offer in offers %}#}
-
-{#    {% endfor %}#}
+    </div>
 {% endblock %}
