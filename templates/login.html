@@ -1,4 +1,20 @@
 {% extends "base.html" %}
 {% block title %}ZarobSi.sk - O nás{% endblock %}
 {% block content %}
+    <h3 class="text-center p-3">Prihlásiť sa</h3>
+    <form method="POST" class="p-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Používateľské meno</span>
+            <input type="text" class="form-control" name="username" maxlength="50">
+        </div>
+        <div class="input-group mb-3">
+            <span class="input-group-text">Heslo</span>
+            <input type="password" class="form-control" name="password" maxlength="50">
+        </div>
+        <a href="/signup" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover">Nemáte ešte účet? Stlačte sem na vytvorenie nového.</a>
+
+        <div class="d-flex justify-content-center mt-3">
+            <input type="submit" class="btn btn-primary" value="Prihlásiť">
+        </div>
+    </form>
 {% endblock %}

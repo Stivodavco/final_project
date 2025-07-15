@@ -1,6 +1,24 @@
 {% extends "base.html" %}
 {% block title %}ZarobSi.sk - Ponuky{% endblock %}
 {% block content %}
+    <form class="container-fluid">
+        <div class="row m-1">
+            <div class="col">
+                <label for="filter-select" class="form-label text-nowrap text-center d-inline">Vyhľadaj podľa</label>
+                <select class="form-select w-auto d-inline-block" id="filter-select" name="filter">
+                    <option {% if selected_filter == "ID" %}selected{% endif %}>ID</option>
+                    <option {% if selected_filter == "Name" %}selected{% endif %}>Name</option>
+                    <option {% if selected_filter == "Bio" %}selected{% endif %}>Bio</option>
+                </select>
+            </div>
+            <div class="col">
+                <input type="text" id="search" name="value" class="form-control w-100" placeholder="Hľadať..." value="{{ search_value }}">
+            </div>
+            <div class="col">
+                <input class="btn btn-primary w-100" type="submit" value="Hľadať">
+            </div>
+        </div>
+    </form>
     <div class="container-fluid">
         <div class="row">
             {% for offer in offers %}
@@ -8,7 +26,7 @@
                 <div class="card w-auto m-2" style="min-width: 15rem">
                     <div class="card-body text-center">
                         <h4 class="card-title">{{ offer["title"] }}</h4>
-                        <h5 class="card-subtitle text-secondary">Od: {{ offer["author"] }}</h5>
+                        <h5 class="card-subtitle text-secondary">Od: <a href="/user/{{ offer["user_id"] }}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover">{{ offer["user"] }}</a></h5>
                         <h5 class="text-warning">{{ offer["rating"] }}<i class="bi bi-star-fill"></i> <span class="text-body-secondary">({{ offer["reviews_num"] }})</span></h5>
                     </div>
                     <div class="card-footer">

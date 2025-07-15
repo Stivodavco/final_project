@@ -27,5 +27,9 @@ def signup():
 def login():
     return render_template("login.html", active_page="login")
 
+@app.route('/user/<int:id>')
+def user(id):
+    return render_template("user.html")
+
 if __name__ == '__main__':
     app.run()

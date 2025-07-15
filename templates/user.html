@@ -1,4 +1,26 @@
 {% extends "base.html" %}
 {% block title %}ZarobSi.sk - O nás{% endblock %}
 {% block content %}
+    <h3 class="text-center pt-3">{{ user["name"] }}</h3>
+    <h5 class="text-center text-secondary">@{{ user["username"] }}</h5>
+    <p class="text-center p-3">{{ user["description"] }}</p>
+    <h5 class="text-center">Ponuky</h5>
+    <div class="container-fluid">
+        <div class="row">
+            {% for offer in offers %}
+                <div class="col d-flex justify-content-center">
+                    <div class="card w-auto m-2" style="min-width: 15rem">
+                        <div class="card-body text-center">
+                            <h4 class="card-title">{{ offer["title"] }}</h4>
+                            <h5 class="text-warning">{{ offer["rating"] }}<i class="bi bi-star-fill"></i> <span class="text-body-secondary">({{ offer["reviews_num"] }})</span></h5>
+                        </div>
+                        <div class="card-footer">
+                            <h5 class="d-inline-block pt-2">Cena: {{ offer["price"] }}€</h5>
+                            <a href="/offers/{{ offer["id"] }}" class="float-end btn btn-primary">Pozrieť <i class="bi bi-info"></i></a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
 {% endblock %}

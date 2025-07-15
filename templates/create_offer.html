@@ -6,17 +6,17 @@
         <div class="mb-3">
             <div class="input-group">
                 <span class="input-group-text">Názov</span>
-                <input type="text" class="form-control" placeholder="Názov vašej ponuky" name="title" maxlength="100" required>
+                <input type="text" class="form-control" placeholder="Názov vašej ponuky" name="title" minlength="3" maxlength="100" required>
             </div>
-            <div class="form-text">Max. 100 znakov</div>
+            <div class="form-text">Min. 3 znaky, max. 100 znakov</div>
         </div>
 
         <div class="mb-3">
             <div class="input-group mb">
                 <span class="input-group-text">Popis</span>
-                <textarea class="form-control" maxlength="1000" placeholder="Váš popis sem" name="description" required></textarea>
+                <textarea class="form-control" maxlength="1000" placeholder="Váš popis sem" name="description"></textarea>
             </div>
-            <div class="form-text">Max. 1000 znakov</div>
+            <div class="form-text">Max. 1000 znakov (voliteľné, ale odporúčené vyplniť)</div>
         </div>
 
         <div class="input-group mb-3">
@@ -26,7 +26,7 @@
         </div>
 
         <div class="d-flex justify-content-center">
-            <input type="submit" class="btn btn-primary" value="Vytvoriť účet">
+            <input type="submit" class="btn btn-primary" value="Pridať ponuku">
         </div>
     </form>
 {% endblock %}
