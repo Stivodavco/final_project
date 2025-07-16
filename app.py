@@ -1,7 +1,15 @@
 from flask import Flask, render_template, redirect, url_for
+from flask_sqlalchemy import SQLAlchemy
+import os
 
 app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
+db = SQLAlchemy(app)
 
+from models.user import User
+from models.offer import Offer
+from models.review import Review
+from models.message import Message
 
 @app.route('/')
 def index():
@@ -9,7 +17,15 @@ def index():
 
 @app.route('/offers')
 def show_offers():
-    return render_template("offers.html", active_page="offers", offers=[{"title":"ajdfblkajdfklbjadadfklbnadlfkbnfadklbnladkbnladfbn;adfblnadfk;bnadf;bnkadfbndankfbjnkdfbndkfbnjkdfbn"}])
+    offers_objs = Offer.query.all()
+    offers = []
+    for offer in offers_objs:
+        offer_dict = offer.dict()
+        offer_dict.update({
+            "user": offer.user.dict()
+        })
+        offers.append(offer_dict)
+    return render_template("offers.html", active_page="offers", offers=offers)
 
 @app.route('/offers/create')
 def create_offer():

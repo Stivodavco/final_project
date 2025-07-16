@@ -3,6 +3,7 @@
 {% block content %}
     <h3 class="text-center pt-3">{{ user["name"] }}</h3>
     <h5 class="text-center text-secondary">@{{ user["username"] }}</h5>
+    <h5 class="text-warning">{{ user["rating"] }}<i class="bi bi-star-fill"></i> <span class="text-body-secondary">({{ user["reviews_num"] }})</span></h5>
     <p class="text-center p-3">{{ user["description"] }}</p>
     <h5 class="text-center">Ponuky</h5>
     <div class="container-fluid">
@@ -23,4 +24,6 @@
             {% endfor %}
         </div>
     </div>
+    <h5 class="text-center">Recenzie</h5>
+
 {% endblock %}
