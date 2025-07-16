@@ -5,7 +5,7 @@
     <form method="POST" class="p-3">
         <div class="input-group mb-3">
             <span class="input-group-text">Meno a priezvisko *</span>
-            <input type="text" class="form-control" placeholder="Jožko Mrkvička" name="full_name" maxlength="50" required>
+            <input type="text" class="form-control" placeholder="Jožko Mrkvička" name="name" minlength="3" maxlength="50" required>
         </div>
         <div class="mb-3">
             <div class="input-group mb">
@@ -18,7 +18,7 @@
         <div class="mb-3">
             <div class="input-group">
                 <span class="input-group-text">Používateľské meno *</span>
-                <input type="text" class="form-control restricted-characters" placeholder="jozko_mrkvicka" name="username" maxlength="50" required>
+                <input type="text" class="form-control restricted-characters" placeholder="jozko_mrkvicka" name="username" maxlength="50" minlength="3" required>
             </div>
             <div class="form-text">Používateľské meno môže obsahovať iba písmená, čísla, podtržítka a pomlčky</div>
         </div>
@@ -30,6 +30,11 @@
             </div>
             <div class="form-text">Minimálne 8 znakov. Ideálne čo najdlhšie ale zapamätateľné, a ťažko uhádnuteľné</div>
         </div>
+
+        {% if error %}
+           <p class="text-danger">{{ error }}</p>
+        {% endif %}
+
         <div class="d-flex justify-content-center">
             <input type="submit" class="btn btn-primary" value="Vytvoriť účet">
         </div>

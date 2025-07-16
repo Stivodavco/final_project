@@ -25,13 +25,16 @@
                     <li class="nav-item">
                         <a class="nav-link {{ "active" if active_page == "about" }}" href="/about">O nás</a>
                     </li>
-                    {% if not logged_in %}
+                    {% if not current_user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link {{ "active" if active_page == "login" }}" href="/login">Prihlásiť sa</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link {{ "active" if active_page == "dashboard" }}" href="/login">Prehľad mojich ponúk</a>
+                            <a class="nav-link {{ "active" if active_page == "dashboard" }}" href="/dashboard">Prehľad mojich ponúk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-warning" href="/logout">Odhlásiť sa</a>
                         </li>
                     {% endif %}
                 </ul>

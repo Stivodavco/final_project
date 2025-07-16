@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}ZarobSi.sk - O nás{% endblock %}
+{% block title %}ZarobSi.sk - Prihlásiť sa{% endblock %}
 {% block content %}
     <h3 class="text-center p-3">Prihlásiť sa</h3>
     <form method="POST" class="p-3">
@@ -11,6 +11,10 @@
             <span class="input-group-text">Heslo</span>
             <input type="password" class="form-control" name="password" maxlength="50">
         </div>
+
+        {% if error %}
+           <p class="text-danger">{{ error }}</p>
+        {% endif %}
 
         <div class="d-flex justify-content-center mt-3">
             <input type="submit" class="btn btn-primary" value="Prihlásiť">
