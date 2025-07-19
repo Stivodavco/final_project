@@ -2,23 +2,19 @@
 {% block title %}ZarobSi.sk - Ponuky{% endblock %}
 {% block content %}
     <form class="container-fluid">
-        <div class="row m-1">
-            <div class="col">
-                <label for="filter-select" class="form-label text-nowrap text-center d-inline">Zoradiť podľa</label>
-                <select class="form-select w-auto d-inline-block" id="filter-select" name="filter">
-                    <option {% if selected_filter == "price" %}selected{% endif %} value="price">Ceny</option>
-                    <option {% if selected_filter == "rating" %}selected{% endif %} value="rating">Hodnotenia</option>
-                </select>
-                <select class="form-select w-auto d-inline-block" name="order">
-                    <option {% if selected_order == "asc" %}selected{% endif %} value="asc">Od najmenšieho</option>
-                    <option {% if selected_order == "desc" %}selected{% endif %} value="desc">Od najväčsieho</option>
-                </select>
-            </div>
-            <div class="col">
-                <input type="text" id="search" name="value" class="form-control" placeholder="Hľadať..." value="{{ search_value }}">
-            </div>
-            <div class="col">
-                <input class="btn btn-primary w-100" type="submit" value="Hľadať">
+        <div class="hstack gap-3 p-1 flex-wrap justify-content-center">
+            <label for="filter-select" class="form-label text-center d-inline">Zoradiť podľa</label>
+            <select class="form-select w-auto d-inline-block" id="filter-select" name="filter">
+                <option {% if selected_filter == "price" %}selected{% endif %} value="price">Ceny</option>
+                <option {% if selected_filter == "rating" %}selected{% endif %} value="rating">Hodnotenia</option>
+            </select>
+            <select class="form-select w-auto d-inline-block" name="order">
+                <option {% if selected_order == "asc" %}selected{% endif %} value="asc">Od najmenšieho</option>
+                <option {% if selected_order == "desc" %}selected{% endif %} value="desc">Od najväčsieho</option>
+            </select>
+            <div class="d-inline-flex w-50">
+                <input type="search" id="search" name="value" class="form-control d-inline-block flex-fill" placeholder="Hľadať..." value="{{ search_value }}" style="min-width: 5rem">
+                <input class="btn btn-primary w-auto d-inline-block float-end ms-3" type="submit" value="Hľadať">
             </div>
         </div>
     </form>
@@ -26,7 +22,7 @@
         <div class="row">
             {% for offer in offers %}
                 <div class="col d-flex justify-content-center">
-                <div class="card w-auto m-2" style="min-width: 15rem">
+                <div class="card w-100 m-2" style="min-width: 15rem; max-width: 18rem">
                     <div class="card-body text-center">
                         <h4 class="card-title">{{ offer["title"] }}</h4>
                         <h5 class="card-subtitle text-secondary">Od: <a href="/user/{{ offer["user_id"] }}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover">{{ offer["user_name"] }}</a></h5>

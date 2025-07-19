@@ -8,9 +8,10 @@ class User(db.Model, UserMixin):
     description = db.Column(db.String(300))
     username = db.Column(db.String(50),unique=True)
     password = db.Column(db.String(255))
-    offers = db.relationship("Offer", back_populates="user")
-    reviews = db.relationship("Review", foreign_keys="[Review.recipient_id]",back_populates="recipient")
-    sent_reviews = db.relationship("Review", foreign_keys="[Review.sender_id]",back_populates="sender")
+    offers = db.relationship("Offer", foreign_keys="Offer.user_id", back_populates="user")
+    reviews = db.relationship("Review", foreign_keys="Review.recipient_id",back_populates="recipient")
+    sent_reviews = db.relationship("Review", foreign_keys="Review.sender_id",back_populates="sender")
+    interests = db.relationship("Offer", foreign_keys="Offer.interested_user_id",back_populates="interested_user")
     messages = db.relationship("Message", back_populates="sender_user")
 
     def dict(self):

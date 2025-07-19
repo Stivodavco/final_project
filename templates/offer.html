@@ -1,10 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-
-</body>
-</html>
+{% extends "base.html" %}
+{% block title %}ZarobSi.sk - Ponuka od používateľa {{ offer["user_name"] }}{% endblock %}
+{% block content %}
+    <h3 class="text-center pt-3">{{ offer["title"] }}</h3>
+    <h4 class="text-center text-secondary">Od: <a href="/user/{{ offer["user_id"] }}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover">{{ offer["user_name"] }}</a></h4>
+    <h4 class="text-center mt-3">Popis</h4>
+    <div class="container-fluid d-flex justify-content-center">
+        <div class="d-flex w-75 justify-content-center">
+            <p class="text-center">{{ "Žiaden popis..." if offer["description"] == None else offer["description"] }}</p>
+        </div>
+    </div>
+    {% if show_chat %}
+        <h4 class="text-center mt-3">Čet</h4>
+        {% if owner_view %}
+            {% if not offer["interested_user_id"] %}
+                <h5 class="text-center">Zatiaľ žiaden záujem. <i class="bi bi-person-fill-x"></i></h5>
+            {% else %}
+                <h5 class="text-center">Hurá! Používateľ <a class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover" href="/user/{{ offer["interested_user_id"] }}">{{ offer["interested_user_name"] }}</a> sa zaujíma o vašu ponuku! <i class="bi bi-person-fill-check"></i></h5>
+            {% endif %}
+        {% endif %}
+        <div class="container-fluid d-flex justify-content-center mb-5" style="height: 50vh;">
+            <div class="card w-75">
+                <div class="overflow-auto card-body d-flex flex-column">
+                    {% for message in messages %}
+                        {% if message["sent_by_me"] %}
+                            <div class="w-75 me-2 mt-2 d-flex justify-content-end align-items-baseline bg-success text-white rounded-3 ms-auto">
+                                <p class="ps-2 text-break">{{ message["text"] }}</p>
+                                <h5 class="p-3">{{ message["sender_name"] }}</h5>
+                            </div>
+                        {% else %}
+                            <div class="w-75 ms-2 mt-2 d-flex justify-content-start align-items-baseline bg-body-secondary rounded-3 me-auto">
+                                <h5 class="p-3">{{ message["sender_name"] }}</h5>
+                                <p class="pe-2 text-break">{{ message["text"] }}</p>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="card-footer">
+                    <form method="POST">
+                        <div class="row">
+                            <div class="col-9">
+                                <input type="text" name="message" placeholder="Správa" class="form-control w-100" maxlength="300">
+                            </div>
+                            <div class="col-3">
+                                <button type="submit" class="btn btn-success w-100"><i class="bi bi-send-fill"></i></button>
+                            </div>
+                        </div>
+                    </form>
+                    <form method="POST">
+                        <input type="checkbox" name="leave_chat" class="d-none" checked readonly>
+                        <button type="submit" class="btn btn-danger mt-2 w-100">Ukončiť čet <i class="bi bi-stop-circle"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <form method="POST">
+            <div class="container-fluid d-flex justify-content-center">
+                <input type="checkbox" name="join_chat" class="d-none" checked readonly>
+                <button type="submit" class="btn btn-primary" {{ 'disabled' if not current_user.is_authenticated or not offer["available"]}}>Mám záujem</button>
+            </div>
+        </form>
+        {% if not current_user.is_authenticated%}
+            <p class="p-3 text-center text-danger">Musíte byť prihláseny na prejavenie záujmu o ponuku.</p>
+        {% elif not offer["available"] %}
+            <p class="p-3 text-center text-danger">Žiaľ, táto ponuka momentálne nie je k dispozícii.</p>
+        {% endif %}
+    {% endif %}
+{% endblock %}

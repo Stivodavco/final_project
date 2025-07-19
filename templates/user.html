@@ -1,16 +1,16 @@
 {% extends "base.html" %}
-{% block title %}ZarobSi.sk - Pou{% endblock %}
+{% block title %}ZarobSi.sk - Používateľ {{ user["name"] }}{% endblock %}
 {% block content %}
     <h3 class="text-center pt-3">{{ user["name"] }}</h3>
     <h5 class="text-center text-secondary">@{{ user["username"] }}</h5>
     <h5 class="text-center text-black">{{ rating }} <i class="bi bi-star-fill text-warning"></i> <span class="text-body-secondary">({{ reviews_num }})</span></h5>
-    <p class="text-center p-3">{{ user["description"] }}</p>
+    <p class="text-center p-3">{{ "Žiaden popis..." if user["description"] == None else user["description"] }}</p>
     <h4 class="text-center">Ponuky</h4>
     <div class="container-fluid">
         <div class="row">
             {% for offer in offers %}
                 <div class="col d-flex justify-content-center">
-                    <div class="card w-auto m-2" style="min-width: 15rem">
+                    <div class="card w-100 m-2" style="min-width: 15rem; max-width: 18rem">
                         <div class="card-body text-center">
                             <h5 class="card-title">{{ offer["title"] }}</h5>
                         </div>
@@ -26,21 +26,51 @@
     {% if offers == [] %}
         <h6 class="text-center p-2">Zatiaľ žiadne ponuky...</h6>
     {% endif %}
-    <h4 class="text-center">Recenzie</h4>
-    {% for review in reviews %}
-        <div class="col d-flex justify-content-center">
-            <div class="card w-auto m-2" style="min-width: 15rem">
-                <div class="card-body text-center">
-                    <h4 class="card-title text-black d-inline">{{ review["rating"] }} <i class="bi bi-star-fill text-warning"></i></h4>
-                    <p class="card-body d-inline">{{ review["comment"] }}</p>
-                </div>
-                <div class="card-footer">
-                    <h6 class="d-inline-block pt-2">Poslal uživateľ: <a href="/user/{{ review["sender_id"] }}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover">{{ review["user_name"] }}</a></h6>
-                </div>
+    <form method="POST" class="container-fluid d-flex justify-content-center mt-4 mb-4" style="height: 50vh;">
+        <div class="card d-flex flex-column h-100" >
+            <div class="card-header">
+                <h4 class="text-center">Recenzie</h4>
             </div>
+            <div class="card-body overflow-auto">
+                {% for review in reviews %}
+                    <div class="card w-100 mt-2 mb-2">
+                        <div class="card-body text-center">
+                            <h4 class="card-title text-black d-inline float-start">{{ review["rating"] }} <i class="bi bi-star-fill text-warning"></i></h4>
+                            <p class="card-body d-inline float-center">{{ review["comment"] }}</p>
+                        </div>
+                        <div class="card-footer">
+                            <h6 class="d-inline-block pt-2">Poslal uživateľ: <a href="/user/{{ review["sender_id"] }}" class="link-dark link-underline-opacity-0 link-underline-opacity-100-hover">{{ review["user_name"] }}</a></h6>
+                        </div>
+                    </div>
+                {% endfor %}
+                {% if reviews == [] %}
+                    <h6 class="text-center p-2">Zatiaľ žiadne recenzie...</h6>
+                {% endif %}
+            </div>
+            {% if can_review %}
+                <div class="card-footer">
+                    <div class="hstack gap-3 justify-content-center flex-wrap p-2">
+                        <div class="btn-group">
+                            <input type="radio" class="btn-check" name="rating" id="star1" value="1" checked>
+                            <label class="btn btn-outline-warning" for="star1">1 <i class="bi bi-star-fill"></i></label>
+
+                            <input type="radio" class="btn-check" name="rating" id="star2" value="2">
+                            <label class="btn btn-outline-warning" for="star2">2 <i class="bi bi-star-fill"></i></label>
+
+                            <input type="radio" class="btn-check" name="rating" id="star3" value="3">
+                            <label class="btn btn-outline-warning" for="star3">3 <i class="bi bi-star-fill"></i></label>
+
+                            <input type="radio" class="btn-check" name="rating" id="star4" value="4">
+                            <label class="btn btn-outline-warning" for="star4">4 <i class="bi bi-star-fill"></i></label>
+
+                            <input type="radio" class="btn-check" name="rating" id="star5" value="5">
+                            <label class="btn btn-outline-warning" for="star5">5 <i class="bi bi-star-fill"></i></label>
+                        </div>
+                        <input type="text" placeholder="Pridať recenziu" class="form-control w-auto" name="comment" style="min-width: 10rem;" minlength="3" maxlength="300" required>
+                        <button type="submit" class="btn btn-primary"><i class="bi bi-patch-plus"></i></button>
+                    </div>
+                </div>
+            {% endif %}
         </div>
-    {% endfor %}
-    {% if reviews == [] %}
-        <h6 class="text-center p-2">Zatiaľ žiadne recenzie...</h6>
-    {% endif %}
+    </form>
 {% endblock %}

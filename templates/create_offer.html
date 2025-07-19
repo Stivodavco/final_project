@@ -21,9 +21,15 @@
 
         <div class="input-group mb-3">
             <span class="input-group-text">Cena</span>
-            <input type="number" class="form-control" placeholder="Cena služby/zručnosti" name="price" maxlength="10" required>
+            <input type="number" class="form-control" placeholder="Cena služby/zručnosti" name="price" required>
             <span class="input-group-text">€</span>
         </div>
+
+        {% if error %}
+           <p class="text-danger">{{ error }}</p>
+        {% elif success %}
+            <p class="text-success">{{ success }}</p>
+        {% endif %}
 
         <div class="d-flex justify-content-center">
             <input type="submit" class="btn btn-primary" value="Pridať ponuku">
