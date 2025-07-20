@@ -279,8 +279,11 @@ def display_user(user_id):
         offers = list(map(lambda offer: offer.dict(), user.offers))
         reviews = []
 
+        current_review = None
         for review in user.reviews:
             user_name = review.sender.name
+            if current_user.is_authenticated and current_user.id == review.sender_id:
+                current_review = review.dict()
             review_dict = review.dict()
             review_dict.update({
                 "user_name": user_name,
@@ -290,11 +293,6 @@ def display_user(user_id):
         user_rating = user.get_rating()
 
         sender_valid = True
-        for review in user.reviews:
-            if review.sender_id == current_user.id:
-                sender_valid = False
-
-
         active_page = None
         is_owner = False
         if current_user.is_authenticated and user_id == current_user.id:
@@ -302,10 +300,11 @@ def display_user(user_id):
             active_page = "profile"
             is_owner = True
 
-        return render_template("user.html", active_page=active_page, offers=offers, reviews=reviews, user=user.dict(), reviews_num=user_rating[1], rating=user_rating[0], can_review=sender_valid, is_owner=is_owner)
+        return render_template("user.html", active_page=active_page, offers=offers, reviews=reviews, user=user.dict(), reviews_num=user_rating[1], rating=user_rating[0], can_review=sender_valid, is_owner=is_owner, current_review=current_review)
     elif request.method == "POST":
         rating = request.form.get("rating")
         comment = request.form.get("comment")
+        edit = request.form.get("edit")
 
         if not current_user.is_authenticated:
             return render_template("login.html", active_page="login", current_user=current_user)
@@ -318,6 +317,7 @@ def display_user(user_id):
         rating_valid = rating and rating >= 1 <= 5
         comment_valid = comment and 3 <= len(comment) <= 300
         sender_valid = True
+        edit_valid = True
 
         user = User.query.get(user_id)
 
@@ -327,9 +327,16 @@ def display_user(user_id):
 
         if user_id == current_user.id:
             sender_valid = False
+            edit_valid = False
+
+        if edit and rating_valid and comment_valid and edit_valid:
+            review = Review.query.filter_by(sender_id=current_user.id, recipient_id=user_id).first()
+
+            if review:
+                review.rating = rating
+                review.comment = comment
 
         if rating_valid and comment_valid and sender_valid:
-            print("adding review!")
             new_review = Review()
             new_review.sender_id = current_user.id
             new_review.recipient_id = user_id
@@ -338,11 +345,11 @@ def display_user(user_id):
 
             db.session.add(new_review)
 
-            try:
-                db.session.commit()
-            except Exception as error:
-                print("Error while adding review: ", error)
-                db.session.rollback()
+        try:
+            db.session.commit()
+        except Exception as error:
+            print("Error while adding review: ", error)
+            db.session.rollback()
 
         return redirect(url_for("display_user",user_id=user_id))
 
@@ -424,6 +431,29 @@ def edit_offer(offer_id):
         else:
             return redirect(url_for("dashboard"))
 
+@app.route('/review/delete/<int:review_id>')
+@login_required
+def delete_review(review_id):
+    review = Review.query.get(review_id)
+
+    recipient_id = None
+
+    if review and review.sender_id == current_user.id:
+        recipient_id = review.recipient_id
+        db.session.delete(review)
+
+        try:
+            db.session.commit()
+        except Exception as error:
+            print("Error while deleting review:",error)
+            db.session.rollback()
+
+    if recipient_id:
+        return redirect(url_for("display_user", user_id=recipient_id))
+    else:
+        return redirect(url_for("show_offers"))
+
+
 @app.route('/profile', methods=["GET", "POST"])
 @login_required
 def edit_profile():
@@ -441,7 +471,6 @@ def edit_profile():
             current_user.description = description
             db.session.commit()
         return redirect(url_for("display_user", user_id=current_user.id))
-
 
 if __name__ == '__main__':
     app.run()
