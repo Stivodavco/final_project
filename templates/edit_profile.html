@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}ZarobSi.sk - Upraviť profil{% endblock %}
+{% block content %}
+    <h3 class="text-center p-3">Upraviť profil</h3>
+    <form method="POST" class="p-3">
+        <div class="input-group mb-3">
+            <span class="input-group-text">Meno a priezvisko</span>
+            <input type="text" class="form-control" placeholder="Jožko Mrkvička" name="name" minlength="3" maxlength="50" required value="{{ user["name"] }}">
+        </div>
+        <div class="mb-3">
+            <div class="input-group mb">
+                <span class="input-group-text">Popis</span>
+                <textarea class="form-control" maxlength="300" placeholder="Váš popis sem (voliteľné)" name="description">{{ user["description"] }}</textarea>
+            </div>
+            <div class="form-text">Max. 300 znakov</div>
+        </div>
+
+        {% if error %}
+           <p class="text-danger">{{ error }}</p>
+        {% endif %}
+
+        <div class="d-flex justify-content-center">
+            <input type="submit" class="btn btn-primary" value="Upraviť profil">
+        </div>
+    </form>
+{% endblock %}

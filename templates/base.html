@@ -11,7 +11,7 @@
     <nav class="navbar navbar-expand-sm bg-primary bg-gradient sticky-top" data-bs-theme="dark">
         <div class="container-fluid">
             <a class="navbar-brand text-light" href="/offers">
-                <img src="../static/images/dollar.svg" alt="Logo" height="25" class="d-inline-block">
+                <img src="{{ url_for('static', filename='images/dollar.svg') }}" alt="Logo" height="25" class="d-inline-block">
                 ZarobSi.sk
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
@@ -32,6 +32,9 @@
                     {% else %}
                         <li class="nav-item">
                             <a class="nav-link {{ "active" if active_page == "dashboard" }}" href="/dashboard">Prehľad mojich ponúk</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {{ "active" if active_page == "profile" }}" href="/user/{{ current_user.id }}">Môj profil</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-warning" href="/logout">Odhlásiť sa</a>

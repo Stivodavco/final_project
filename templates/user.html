@@ -5,6 +5,11 @@
     <h5 class="text-center text-secondary">@{{ user["username"] }}</h5>
     <h5 class="text-center text-black">{{ rating }} <i class="bi bi-star-fill text-warning"></i> <span class="text-body-secondary">({{ reviews_num }})</span></h5>
     <p class="text-center p-3">{{ "Žiaden popis..." if user["description"] == None else user["description"] }}</p>
+    {% if is_owner %}
+        <div class="d-flex justify-content-center mb-3">
+            <a href="/profile" class="btn btn-warning">Upraviť profil <i class="bi bi-pencil-fill"></i></a>
+        </div>
+    {% endif %}
     <h4 class="text-center">Ponuky</h4>
     <div class="container-fluid">
         <div class="row">

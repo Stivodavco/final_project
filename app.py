@@ -94,7 +94,7 @@ def create_offer():
             try:
                 price_valid = price and int(price) <= 1000000
             except ValueError:
-                return render_template("create_offer.html", current_user=current_user, error="Cenu musí byť číslo.")
+                return render_template("create_offer.html", current_user=current_user, error="Cena musí byť číslo.")
 
             if not price_valid:
                 return render_template("create_offer.html", current_user=current_user, error="Cena ponuky nemôže byť nad 1 000 000€")
@@ -294,10 +294,15 @@ def display_user(user_id):
             if review.sender_id == current_user.id:
                 sender_valid = False
 
+
+        active_page = None
+        is_owner = False
         if current_user.is_authenticated and user_id == current_user.id:
             sender_valid = False
+            active_page = "profile"
+            is_owner = True
 
-        return render_template("user.html", offers=offers, reviews=reviews, user=user.dict(), reviews_num=user_rating[1], rating=user_rating[0], can_review=sender_valid)
+        return render_template("user.html", active_page=active_page, offers=offers, reviews=reviews, user=user.dict(), reviews_num=user_rating[1], rating=user_rating[0], can_review=sender_valid, is_owner=is_owner)
     elif request.method == "POST":
         rating = request.form.get("rating")
         comment = request.form.get("comment")
@@ -367,6 +372,76 @@ def dashboard():
                     db.session.rollback()
 
         return redirect(url_for("dashboard"))
+
+@app.route('/offers/edit/<int:offer_id>', methods=["GET", "POST"])
+@login_required
+def edit_offer(offer_id):
+    offer = Offer.query.get(offer_id)
+
+    if not offer:
+        return render_template("error.html", http_code=404, error="Stránka na ktorú ste sa chceli dostať neexistuje! Skontrolujte URL pre chyby."), 404
+
+    if request.method == "GET":
+        if offer.user_id == current_user.id:
+            return render_template("edit_offer.html", active_page="dashboard", current_user=current_user, offer=offer.dict())
+        else:
+            return redirect(url_for("dashboard"))
+    elif request.method == "POST":
+        if offer.user_id == current_user.id:
+            title = request.form.get("title")
+            description = request.form.get("description","")
+            price = request.form.get("price")
+            specification = request.form.get("specification","")
+
+            title_valid = title and 3 <= len(title) <= 100
+            description_valid = len(description) <= 1000
+            specification_valid = len(specification) <= 10
+            try:
+                price_valid = price and int(price) <= 1000000
+            except ValueError:
+                return render_template("create_offer.html", current_user=current_user, error="Cena musí byť číslo.")
+
+            if not price_valid:
+                return render_template("create_offer.html", current_user=current_user, error="Cena ponuky nemôže byť nad 1 000 000€")
+
+            if title_valid and description_valid and price_valid and specification_valid:
+                offer.title = title
+                offer.description = description
+                offer.price = price
+                if specification == "":
+                    offer.specification = None
+                else:
+                    offer.specification = specification
+
+                try:
+                    db.session.commit()
+                except Exception as error:
+                    print("Error while trying to edit offer:",error)
+                    db.session.rollback()
+
+                return redirect(url_for("dashboard"))
+            return render_template("create_offer.html", current_user=current_user,error="Nastala chyba. Skontrolujte či ste splnili všetky kritéria.")
+        else:
+            return redirect(url_for("dashboard"))
+
+@app.route('/profile', methods=["GET", "POST"])
+@login_required
+def edit_profile():
+    if request.method == "GET":
+        return render_template("edit_profile.html", active_page="profile", current_user=current_user, user=current_user.dict())
+    elif request.method == "POST":
+        name = request.form.get("name")
+        description = request.form.get("description","")
+
+        name_valid = name and 3 <= len(name) <= 50
+        description_valid = len(description) <= 300
+
+        if name_valid and description_valid:
+            current_user.name = name
+            current_user.description = description
+            db.session.commit()
+        return redirect(url_for("display_user", user_id=current_user.id))
+
 
 if __name__ == '__main__':
     app.run()

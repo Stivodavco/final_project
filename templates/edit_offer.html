@@ -1,12 +1,12 @@
 {% extends "base.html" %}
-{% block title %}ZarobSi.sk - Pridať ponuku{% endblock %}
+{% block title %}ZarobSi.sk - Upraviť ponuku{% endblock %}
 {% block content %}
-    <h3 class="text-center p-3">Pridať ponuku</h3>
+    <h3 class="text-center p-3">Upraviť ponuku</h3>
     <form method="POST" class="p-3 was-validated">
         <div class="mb-3">
             <div class="input-group">
                 <span class="input-group-text">Názov</span>
-                <input type="text" class="form-control" placeholder="Názov vašej ponuky" name="title" minlength="3" maxlength="100" required>
+                <input type="text" class="form-control" placeholder="Názov vašej ponuky" name="title" minlength="3" maxlength="100" required value="{{ offer["title"] }}">
             </div>
             <div class="form-text">Min. 3 znaky, max. 100 znakov</div>
         </div>
@@ -14,7 +14,7 @@
         <div class="mb-3">
             <div class="input-group mb">
                 <span class="input-group-text">Popis</span>
-                <textarea class="form-control" maxlength="1000" placeholder="Váš popis sem" name="description"></textarea>
+                <textarea class="form-control" maxlength="1000" placeholder="Váš popis sem" name="description">{{ offer["description"] }}</textarea>
             </div>
             <div class="form-text">Max. 1000 znakov (voliteľné, ale odporúčené vyplniť)</div>
         </div>
@@ -22,16 +22,16 @@
         <div class="input-group mb-3">
             <span class="input-group-text">Cena dohodou</span>
             <div class="input-group-text">
-                <input type="checkbox" class="form-check-input required-toggler" data-target="price" data-hide="price-group" name="no_price" onchange="toggleCheck()">
+                <input type="checkbox" class="form-check-input required-toggler" data-target="price" data-hide="price-group" name="no_price" onchange="toggleCheck()" {{ "checked" if not offer["has_price"] }}>
             </div>
         </div>
 
         <div class="input-group mb-3" id="price-group">
             <span class="input-group-text">Cena</span>
-            <input type="number" class="form-control" placeholder="Cena služby/zručnosti" name="price" id="price" required>
+            <input type="number" class="form-control" placeholder="Cena služby/zručnosti" name="price" id="price" required value="{{ offer["price"] }}">
             <span class="input-group-text">€</span>
             <span class="input-group-text">/</span>
-            <input class="form-control" list="specificationOptions" maxlength="10" name="specification">
+            <input class="form-control" list="specificationOptions" maxlength="10" name="specification" value="{{ "" if not offer["specification"] else offer["specification"] }}">
             <datalist id="specificationOptions">
                 <option>hodinu</option>
                 <option>deň</option>
@@ -49,8 +49,8 @@
         {% endif %}
 
         <div class="d-flex justify-content-center">
-            <input type="submit" class="btn btn-primary" value="Pridať ponuku">
+            <input type="submit" class="btn btn-primary" value="Upraviť ponuku">
         </div>
     </form>
 {% endblock %}
-{% block scripts %}<script src="{{ url_for('static', filename='javascript/form_validation.js') }}">{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='javascript/form_validation.js') }}"></script>{% endblock %}
