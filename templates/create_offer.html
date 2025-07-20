@@ -20,9 +20,26 @@
         </div>
 
         <div class="input-group mb-3">
+            <span class="input-group-text">Cena dohodou</span>
+            <div class="input-group-text">
+                <input type="checkbox" class="form-check-input required-toggler" data-target="price" data-hide="price-group" name="no_price" onchange="toggleCheck()">
+            </div>
+        </div>
+
+        <div class="input-group mb-3" id="price-group">
             <span class="input-group-text">Cena</span>
-            <input type="number" class="form-control" placeholder="Cena služby/zručnosti" name="price" required>
+            <input type="number" class="form-control" placeholder="Cena služby/zručnosti" name="price" id="price" required>
             <span class="input-group-text">€</span>
+            <span class="input-group-text">/</span>
+            <input class="form-control" list="specificationOptions" maxlength="10" name="specification">
+            <datalist id="specificationOptions">
+                <option>hodinu</option>
+                <option>deň</option>
+                <option>týždeň</option>
+                <option>mesiac</option>
+                <option>rok</option>
+                <option>kus</option>
+            </datalist>
         </div>
 
         {% if error %}
@@ -36,3 +53,4 @@
         </div>
     </form>
 {% endblock %}
+{% block scripts %}<script src="../static/javascript/form_validation.js"></script>{% endblock %}

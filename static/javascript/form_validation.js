@@ -19,3 +19,18 @@ document.querySelectorAll(".restricted-characters").forEach(input => {
     }
   });
 });
+
+function toggleCheck() {
+    document.querySelectorAll(".required-toggler").forEach(checkbox => {
+        const requiredTarget = document.getElementById(checkbox.dataset.target);
+        const hide = document.getElementById(checkbox.dataset.hide);
+
+        if (checkbox.checked === true) {
+            requiredTarget.removeAttribute("required");
+            hide.classList.add("d-none");
+        } else {
+            requiredTarget.setAttribute("required", "")
+            hide.classList.remove("d-none")
+        }
+    })
+}

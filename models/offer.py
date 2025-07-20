@@ -11,6 +11,8 @@ class Offer(db.Model):
     interested_user = db.relationship("User", foreign_keys=[interested_user_id],back_populates="interests")
     messages = db.relationship("Message", back_populates="offer")
     price = db.Column(db.Integer)
+    specification = db.Column(db.String(10)) # eg. 10€ >> / hodinu <<\
+    has_price = db.Column(db.Boolean)
 
     def dict(self):
         return {
@@ -19,5 +21,7 @@ class Offer(db.Model):
             "user_id": self.user_id,
             "interested_user_id": self.interested_user_id,
             "description": self.description,
-            "price": self.price
+            "price": self.price,
+            "specification": self.specification,
+            "has_price": self.has_price
         }

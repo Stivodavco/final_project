@@ -15,8 +15,16 @@
                             <h5 class="card-title">{{ offer["title"] }}</h5>
                         </div>
                         <div class="card-footer">
-                            <h6 class="d-inline-block pt-2">Cena: {{ offer["price"] }}€</h6>
-                            <a href="/offers/{{ offer["id"] }}" class="float-end btn btn-primary">Pozrieť <i class="bi bi-info"></i></a>
+                            <h6 class="pt-2">
+                                {% if not offer["has_price"] %}
+                                    Cena dohodou
+                                {% elif offer["specification"] %}
+                                    Cena: {{ offer["price"] }}€/{{ offer["specification"] }}
+                                {% else %}
+                                    Cena: {{ offer["price"] }}€
+                                {% endif %}
+                            </h6>
+                            <a href="/offers/{{ offer["id"] }}" class="btn btn-primary w-100">Pozrieť <i class="bi bi-info"></i></a>
                         </div>
                     </div>
                 </div>

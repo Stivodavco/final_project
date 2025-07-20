@@ -9,6 +9,16 @@
             <p class="text-center">{{ "Žiaden popis..." if offer["description"] == None else offer["description"] }}</p>
         </div>
     </div>
+    <h4 class="text-center mt-3">Cena</h4>
+    <h5 class="pt-2 text-center">
+        {% if not offer["has_price"] %}
+            Cena dohodou
+        {% elif offer["specification"] %}
+            {{ offer["price"] }}€/{{ offer["specification"] }}
+        {% else %}
+            {{ offer["price"] }}€
+        {% endif %}
+    </h5>
     {% if show_chat %}
         <h4 class="text-center mt-3">Čet</h4>
         {% if owner_view %}
@@ -23,9 +33,9 @@
                 <div class="overflow-auto card-body d-flex flex-column">
                     {% for message in messages %}
                         {% if message["sent_by_me"] %}
-                            <div class="w-75 me-2 mt-2 d-flex justify-content-end align-items-baseline bg-success text-white rounded-3 ms-auto">
-                                <p class="ps-2 text-break">{{ message["text"] }}</p>
+                            <div class="w-75 me-2 mt-2 d-flex justify-content-start align-items-baseline bg-success text-white rounded-3 ms-auto">
                                 <h5 class="p-3">{{ message["sender_name"] }}</h5>
+                                <p class="pe-2 text-break">{{ message["text"] }}</p>
                             </div>
                         {% else %}
                             <div class="w-75 ms-2 mt-2 d-flex justify-content-start align-items-baseline bg-body-secondary rounded-3 me-auto">

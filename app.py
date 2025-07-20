@@ -5,6 +5,8 @@ import unicodedata
 import re
 import os
 
+from mypyc.primitives.set_ops import new_set_op
+
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URI")
 db = SQLAlchemy(app)
@@ -45,6 +47,8 @@ def show_offers():
             "user_name": offer.user.name,
             "owner_rating": offer.user.get_rating()[0]
         })
+        if offer_dict["price"] is None:
+            offer_dict.pop("price")
         offers.append(offer_dict)
 
     filter_by = request.args.get("filter")
@@ -54,9 +58,11 @@ def show_offers():
     if value:
         offers = list(filter(lambda item: True if remove_accents(value.lower()) in remove_accents(item["title"].lower()) or remove_accents(value.lower()) in remove_accents(item["user_name"].lower()) else False, offers))
 
+    offers = list(filter(lambda item: True if not item["interested_user_id"] else False, offers))
+
     if filter_by and order:
         if filter_by == "price":
-            offers.sort(key=lambda item: item["price"],reverse=True if order == "desc" else False)
+            offers.sort(key=lambda item: item.get("price",0),reverse=True if order == "desc" else False)
         elif filter_by == "rating":
             offers.sort(key=lambda item: item["owner_rating"], reverse=True if order == "desc" else False)
     return render_template("offers.html", active_page="offers", offers=offers, current_user=current_user, selected_filter=filter_by, selected_order=order, search_value="" if value is None else value)
@@ -70,31 +76,40 @@ def create_offer():
         title = request.form.get("title")
         description = request.form.get("description", "")
         price = request.form.get("price")
+        specification = request.form.get("specification")
 
-        title_valid = 3 <= len(title) <= 100
-        description_valid = len(description) <= 1000
-        try:
-            price_valid = price and int(price) <= 1000000
-        except ValueError:
-            return render_template("create_offer.html", current_user=current_user, error="Cenu musí byť číslo.")
-
-        if not price_valid:
-            return render_template("create_offer.html", current_user=current_user, error="Cena ponuky nemôže byť nad 1 000 000€")
-
-        if title_valid and description_valid and price_valid:
+        if request.form.get("no_price"):
             new_offer = Offer()
             new_offer.title = title
             new_offer.description = description
-            new_offer.price = price
+            new_offer.has_price = False
             new_offer.user_id = current_user.id
-
+            db.session.add(new_offer)
+            db.session.commit()
+            return render_template("create_offer.html", current_user=current_user, success="Ponuka bola pridaná.")
+        else:
+            title_valid = 3 <= len(title) <= 100
+            description_valid = len(description) <= 1000
+            specification_valid = len(specification) <= 10
             try:
+                price_valid = price and int(price) <= 1000000
+            except ValueError:
+                return render_template("create_offer.html", current_user=current_user, error="Cenu musí byť číslo.")
+
+            if not price_valid:
+                return render_template("create_offer.html", current_user=current_user, error="Cena ponuky nemôže byť nad 1 000 000€")
+
+            if title_valid and description_valid and price_valid and specification_valid:
+                new_offer = Offer()
+                new_offer.title = title
+                new_offer.description = description
+                new_offer.has_price = True
+                new_offer.price = price
+                new_offer.user_id = current_user.id
+                if specification != "":
+                    new_offer.specification = specification
                 db.session.add(new_offer)
                 db.session.commit()
-            except Exception as error:
-                print("Error while adding offer:", error)
-                db.session.rollback()
-            else:
                 return render_template("create_offer.html", current_user=current_user, success="Ponuka bola pridaná.")
         return render_template("create_offer.html", current_user=current_user, error="Nastala chyba.")
     else:
