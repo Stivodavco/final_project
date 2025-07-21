@@ -399,17 +399,25 @@ def edit_offer(offer_id):
             description = request.form.get("description","")
             price = request.form.get("price")
             specification = request.form.get("specification","")
+            no_price = request.form.get("no_price")
 
             title_valid = title and 3 <= len(title) <= 100
             description_valid = len(description) <= 1000
             specification_valid = len(specification) <= 10
-            try:
-                price_valid = price and int(price) <= 1000000
-            except ValueError:
-                return render_template("create_offer.html", current_user=current_user, error="Cena musí byť číslo.")
 
-            if not price_valid:
-                return render_template("create_offer.html", current_user=current_user, error="Cena ponuky nemôže byť nad 1 000 000€")
+            price_valid = True
+
+            if no_price:
+                offer.has_price = False
+            else:
+                offer.has_price = True
+                try:
+                    price_valid = price and int(price) <= 1000000
+                except ValueError:
+                    return render_template("create_offer.html", current_user=current_user, error="Cena musí byť číslo.")
+
+                if not price_valid:
+                    return render_template("create_offer.html", current_user=current_user, error="Cena ponuky nemôže byť nad 1 000 000€")
 
             if title_valid and description_valid and price_valid and specification_valid:
                 offer.title = title
